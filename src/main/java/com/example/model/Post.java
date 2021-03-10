@@ -1,4 +1,123 @@
 package com.example.model;
 
-public class Posts {
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+
+@Entity
+@Table(name = "posts")
+public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Column(nullable = false, name = "is_active", columnDefinition = "TINYINT(1)")
+    private boolean isActive;
+
+    @Column(nullable = false, name = "moderation_status")
+    @Enumerated(EnumType.STRING)
+    private ModerationStatus status;
+
+    @Column(name = "moderator_id")
+    private int moderatorId;
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(nullable = false, name = "time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
+    @Column(nullable = false, name = "title")
+    private String title;
+
+    @Type(type="text")
+    @Column(nullable = false)
+    private String text;
+
+    @Column(nullable = false, name = "view_count")
+    private int viewCount;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tag2post",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public ModerationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ModerationStatus status) {
+        this.status = status;
+    }
+
+    public int getModeratorId() {
+        return moderatorId;
+    }
+
+    public void setModeratorId(int moderatorId) {
+        this.moderatorId = moderatorId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
 }
