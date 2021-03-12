@@ -1,0 +1,429 @@
+databaseChangeLog:
+	- changeSet:
+		  id: 1615572163659-1
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: code
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: time
+							  type: datetime
+						- column:
+							  constraints:
+								  nullable: false
+							  name: secret_code
+							  type: VARCHAR(255)
+					tableName: captcha_codes
+	- changeSet:
+		  id: 1615572163659-2
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: code
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: name
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: value
+							  type: CHAR(1)
+					tableName: global_settings
+	- changeSet:
+		  id: 1615572163659-3
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  name: next_val
+							  type: BIGINT
+					tableName: hibernate_sequence
+	- changeSet:
+		  id: 1615572163659-4
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: time
+							  type: datetime
+						- column:
+							  name: parent_id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: text
+							  type: LONGTEXT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: post_id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: user_id
+							  type: INT
+					tableName: post_comments
+	- changeSet:
+		  id: 1615572163659-5
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: time
+							  type: datetime
+						- column:
+							  constraints:
+								  nullable: false
+							  name: value
+							  type: BIT(1)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: post_id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: user_id
+							  type: INT
+					tableName: post_votes
+	- changeSet:
+		  id: 1615572163659-6
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: time
+							  type: datetime
+						- column:
+							  constraints:
+								  nullable: false
+							  name: is_active
+							  type: BIT(1)
+						- column:
+							  name: moderator_id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: moderation_status
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: text
+							  type: LONGTEXT
+						- column:
+							  constraints:
+								  nullable: false
+							  name: title
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: view_count
+							  type: INT
+						- column:
+							  name: user_id
+							  type: INT
+					tableName: posts
+	- changeSet:
+		  id: 1615572163659-7
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: post_id
+							  type: INT
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: tag_id
+							  type: INT
+					tableName: tag2post
+	- changeSet:
+		  id: 1615572163659-8
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  name: name
+							  type: VARCHAR(255)
+					tableName: tags
+	- changeSet:
+		  id: 1615572163659-9
+		  author: donyfutura (generated)
+		  changes:
+			  - createTable:
+					columns:
+						- column:
+							  constraints:
+								  nullable: false
+								  primaryKey: true
+							  name: id
+							  type: INT
+						- column:
+							  name: code
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: reg_time
+							  type: datetime
+						- column:
+							  constraints:
+								  nullable: false
+							  name: email
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: is_moderator
+							  type: BIT(1)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: name
+							  type: VARCHAR(255)
+						- column:
+							  constraints:
+								  nullable: false
+							  name: password
+							  type: VARCHAR(255)
+						- column:
+							  name: photo
+							  type: LONGTEXT
+					tableName: users
+	- changeSet:
+		  id: 1615572163659-10
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: user_id
+					indexName: FK5lidm6cqbc7u4xhqpxm898qme
+					tableName: posts
+	- changeSet:
+		  id: 1615572163659-11
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: post_id
+					indexName: FK9jh5u17tmu1g7xnlxa77ilo3u
+					tableName: post_votes
+	- changeSet:
+		  id: 1615572163659-12
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: user_id
+					indexName: FK9q09ho9p8fmo6rcysnci8rocc
+					tableName: post_votes
+	- changeSet:
+		  id: 1615572163659-13
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: post_id
+					indexName: FKaawaqxjs3br8dw5v90w7uu514
+					tableName: post_comments
+	- changeSet:
+		  id: 1615572163659-14
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: tag_id
+					indexName: FKjou6suf2w810t2u3l96uasw3r
+					tableName: tag2post
+	- changeSet:
+		  id: 1615572163659-15
+		  author: donyfutura (generated)
+		  changes:
+			  - createIndex:
+					columns:
+						- column:
+							  name: user_id
+					indexName: FKsnxoecngu89u3fh4wdrgf0f2g
+					tableName: post_comments
+	- changeSet:
+		  id: 1615572163659-16
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: user_id
+					baseTableName: posts
+					constraintName: FK5lidm6cqbc7u4xhqpxm898qme
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: users
+					validate: true
+	- changeSet:
+		  id: 1615572163659-17
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: post_id
+					baseTableName: post_votes
+					constraintName: FK9jh5u17tmu1g7xnlxa77ilo3u
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: posts
+					validate: true
+	- changeSet:
+		  id: 1615572163659-18
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: user_id
+					baseTableName: post_votes
+					constraintName: FK9q09ho9p8fmo6rcysnci8rocc
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: users
+					validate: true
+	- changeSet:
+		  id: 1615572163659-19
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: post_id
+					baseTableName: post_comments
+					constraintName: FKaawaqxjs3br8dw5v90w7uu514
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: posts
+					validate: true
+	- changeSet:
+		  id: 1615572163659-20
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: tag_id
+					baseTableName: tag2post
+					constraintName: FKjou6suf2w810t2u3l96uasw3r
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: tags
+					validate: true
+	- changeSet:
+		  id: 1615572163659-21
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: post_id
+					baseTableName: tag2post
+					constraintName: FKpjoedhh4h917xf25el3odq20i
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: posts
+					validate: true
+	- changeSet:
+		  id: 1615572163659-22
+		  author: donyfutura (generated)
+		  changes:
+			  - addForeignKeyConstraint:
+					baseColumnNames: user_id
+					baseTableName: post_comments
+					constraintName: FKsnxoecngu89u3fh4wdrgf0f2g
+					deferrable: false
+					initiallyDeferred: false
+					onDelete: RESTRICT
+					onUpdate: RESTRICT
+					referencedColumnNames: id
+					referencedTableName: users
+					validate: true
