@@ -75,7 +75,7 @@
                     <propertyFile>src/main/resources/liquibase.properties</propertyFile>
                     <propertyFileWillOverride>true</propertyFileWillOverride>
                     <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                    <changeLogFile>db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <changeLogFile>db.changelog/db.changelog-master.xml</changeLogFile>
                 </configuration>
             </plugin>
         </plugins>
