@@ -1,205 +1,23 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
 
-    <changeSet author="donyfutura (generated)" id="1615585896896-1">
-        <createTable tableName="captcha_codes">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="time" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="secret_code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="0" author="donyfutura">
+        <tagDatabase tag="db_init"/>
     </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-2">
-        <createTable tableName="global_settings">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="CHAR(1)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+
+    <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>
+    
+    <changeSet id="2" author="donyfutura">
+        <tagDatabase tag="v.1.0"/>
     </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-3">
-        <createTable tableName="hibernate_sequence">
-            <column name="next_val" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-4">
-        <createTable tableName="post_comments">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="time" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="parent_id" type="INT"/>
-            <column name="text" type="LONGTEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="post_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-5">
-        <createTable tableName="post_votes">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="time" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="post_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-6">
-        <createTable tableName="posts">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="time" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="is_active" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="moderator_id" type="INT"/>
-            <column name="moderation_status" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="text" type="LONGTEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="view_count" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="INT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-7">
-        <createTable tableName="tag2post">
-            <column name="post_id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="tag_id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-8">
-        <createTable tableName="tags">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-9">
-        <createTable tableName="users">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="code" type="VARCHAR(255)"/>
-            <column name="reg_time" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="is_moderator" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="photo" type="LONGTEXT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-10">
-        <createIndex indexName="FK5lidm6cqbc7u4xhqpxm898qme" tableName="posts">
-            <column name="user_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-11">
-        <createIndex indexName="FK9jh5u17tmu1g7xnlxa77ilo3u" tableName="post_votes">
-            <column name="post_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-12">
-        <createIndex indexName="FK9q09ho9p8fmo6rcysnci8rocc" tableName="post_votes">
-            <column name="user_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-13">
-        <createIndex indexName="FKaawaqxjs3br8dw5v90w7uu514" tableName="post_comments">
-            <column name="post_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-14">
-        <createIndex indexName="FKjou6suf2w810t2u3l96uasw3r" tableName="tag2post">
-            <column name="tag_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-15">
-        <createIndex indexName="FKsnxoecngu89u3fh4wdrgf0f2g" tableName="post_comments">
-            <column name="user_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-16">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="posts" constraintName="FK5lidm6cqbc7u4xhqpxm898qme" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-17">
-        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="post_votes" constraintName="FK9jh5u17tmu1g7xnlxa77ilo3u" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-18">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="post_votes" constraintName="FK9q09ho9p8fmo6rcysnci8rocc" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-19">
-        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="post_comments" constraintName="FKaawaqxjs3br8dw5v90w7uu514" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-20">
-        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="tag2post" constraintName="FKjou6suf2w810t2u3l96uasw3r" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tags" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-21">
-        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="tag2post" constraintName="FKpjoedhh4h917xf25el3odq20i" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
-    </changeSet>
-    <changeSet author="donyfutura (generated)" id="1615585896896-22">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="post_comments" constraintName="FKsnxoecngu89u3fh4wdrgf0f2g" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
-    </changeSet>
+
+
 </databaseChangeLog>

@@ -11,14 +11,14 @@ import java.util.Set;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, name = "is_active", columnDefinition = "TINYINT(1)")
+    @Column(nullable = false, name = "is_active")
     private boolean isActive;
 
-    @Column(nullable = false, name = "moderation_status")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(columnDefinition = "varchar", nullable = false, name = "moderation_status")
     private ModerationStatus status;
 
     @Column(name = "moderator_id")

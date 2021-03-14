@@ -8,7 +8,7 @@ import java.util.Date;
 public class PostVotes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(cascade=CascadeType.ALL)
@@ -23,7 +23,7 @@ public class PostVotes {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(nullable = false)
     private boolean value;
 
     public int getId() {

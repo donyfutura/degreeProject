@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="10-changelog-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="20-changelog-posts-table.xml" relativeToChangelogFile="true"/>
+    <include file="30-changelog-captcha_codes-table.xml" relativeToChangelogFile="true"/>
+    <include file="40-changelog-global_settings-table.xml" relativeToChangelogFile="true"/>
+    <include file="60-changelog-post_comments-table.xml" relativeToChangelogFile="true"/>
+
+    <include file="70-changelog-tags-table.xml" relativeToChangelogFile="true"/>
+    <include file="80-changelog-post_votes-table.xml" relativeToChangelogFile="true"/>
+    <include file="90-changelog-tag2post-table.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>
