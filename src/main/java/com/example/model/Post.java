@@ -49,6 +49,36 @@ public class Post {
     )
     private Set<Tag> tags;
 
+    @OneToMany(mappedBy = "post")
+    private Set<PostVotes> votes;
+
+    @OneToMany(mappedBy = "post")
+    private Set<PostComment> comments;
+
+    public Set<PostComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<PostComment> comments) {
+        this.comments = comments;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<PostVotes> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<PostVotes> votes) {
+        this.votes = votes;
+    }
+
     public int getId() {
         return id;
     }

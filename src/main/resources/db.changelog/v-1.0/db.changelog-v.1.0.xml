@@ -10,7 +10,6 @@
     <include file="30-changelog-captcha_codes-table.xml" relativeToChangelogFile="true"/>
     <include file="40-changelog-global_settings-table.xml" relativeToChangelogFile="true"/>
     <include file="60-changelog-post_comments-table.xml" relativeToChangelogFile="true"/>
-
     <include file="70-changelog-tags-table.xml" relativeToChangelogFile="true"/>
     <include file="80-changelog-post_votes-table.xml" relativeToChangelogFile="true"/>
     <include file="90-changelog-tag2post-table.xml" relativeToChangelogFile="true"/>
