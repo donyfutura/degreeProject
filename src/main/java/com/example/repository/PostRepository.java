@@ -12,8 +12,9 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
 
     List<Post> findByUserId(int user_id);
 
-    /*@Query("select * from posts where is_active = true")*/
-    List<Post> findAllByActive(boolean active);
+    List<Post> findAll();
+
+
 
 
 

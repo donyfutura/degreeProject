@@ -1,5 +1,8 @@
 package com.example.api.response.innerObjects;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Post {
 
     private int id;

@@ -6,7 +6,6 @@ import com.example.api.response.innerObjects.User;
 import com.example.repository.PostRepository;
 import com.example.repository.PostVotesRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,23 +26,31 @@ public class PostService {
 
     public PostsResponse getPosts(String offset, String limit, String mode){
         List<Post> list = new ArrayList<>();
-        List<com.example.model.Post> posts = postRepository.findAllByActive(true);
-/*
-        if (mode.equals("popular")){
+        List<com.example.model.Post> posts = postRepository.findAll();
 
-        } else if (mode.equals("best")){
-            int likes = postVotesRepository.countPostVotesByPostIdAndValueEquals(posts.get(i).getId(), true);
-            posts.sort();
-        } else if (mode.equals("early")){
-            posts.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
-        } else {
-            posts.sort(((o1, o2) -> ));
-        }*/
+        int lim = Math.min(Integer.parseInt(limit), posts.size());
 
-        for (int i = Integer.parseInt(offset); i < Integer.parseInt(limit); i++){
+        switch (mode) {
+            case "popular":
+                posts.sort(Comparator.comparingInt(o -> -1 *o.getComments().size()));
+                break;
+            case "best":
+                // ПРоблема
+                posts.sort(Comparator.comparingInt(o -> -1 * o.getVotes().size()));
+                break;
+            case "early":
+                posts.sort(Comparator.comparing(com.example.model.Post::getDate));
+                break;
+            case "recent":
+                posts.sort(Comparator.comparing(com.example.model.Post::getDate).reversed());
+        }
+
+        for (int i = Integer.parseInt(offset); i < lim; i++){
             Post post = new Post();
             post.setId(posts.get(i).getId());
-            post.setTimestamp(posts.get(i).getDate().getTime());
+
+            Long time = posts.get(i).getDate().getTime();
+            post.setTimestamp(Long.parseLong(time.toString().substring(0, 10)));
 
             User user = new User();
             user.setId(posts.get(i).getUser().getId());
@@ -58,7 +65,9 @@ public class PostService {
             post.setDislikeCount(postVotesRepository.countPostVotesByPostIdAndValueEquals(posts.get(i).getId(), false));
             post.setViewCount(posts.get(i).getViewCount());
             post.setCommentCount(posts.get(i).getComments().size());
+            list.add(post);
         }
+
         PostsResponse postsResponse = new PostsResponse(posts.size(), list);
 
         return postsResponse;

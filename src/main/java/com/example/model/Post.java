@@ -17,7 +17,7 @@ public class Post {
     @Column(nullable = false, name = "is_active")
     private boolean isActive;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar", nullable = false, name = "moderation_status")
     private ModerationStatus status;
 

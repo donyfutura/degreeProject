@@ -14,7 +14,7 @@ public class PostComment {
     private int id;
 
     @Column(name = "parent_id")
-    private int parentId;
+    private Integer parentId;
 
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "post_id", nullable = false)
@@ -31,4 +31,52 @@ public class PostComment {
     @Type(type="text")
     @Column(nullable = false)
     private String text;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

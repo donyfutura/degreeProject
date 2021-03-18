@@ -1,14 +1,21 @@
 package com.example.repository;
 
-import com.example.model.GlobalSetting;
+
+import com.example.model.Tag;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface SettingsRepository extends CrudRepository<GlobalSetting, Integer> {
+public interface TagRepository extends CrudRepository<Tag, Integer> {
 
-    List<GlobalSetting> findAll();
+    List<Tag> findAll();
+
+    Tag findTagByNameStartsWith(String query);
+
+
+
+
 
 }
