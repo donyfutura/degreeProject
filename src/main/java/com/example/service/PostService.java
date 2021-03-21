@@ -1,11 +1,16 @@
 package com.example.service;
 
 import com.example.api.response.PostsResponse;
-import com.example.api.response.innerObjects.Post;
 import com.example.api.response.innerObjects.User;
+import com.example.model.Post;
 import com.example.repository.PostRepository;
 import com.example.repository.PostVotesRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.expression.Numbers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,51 +30,45 @@ public class PostService {
     }
 
     public PostsResponse getPosts(String offset, String limit, String mode){
-        List<Post> list = new ArrayList<>();
-        List<com.example.model.Post> posts = postRepository.findAll();
 
-        int lim = Math.min(Integer.parseInt(limit), posts.size());
+        List<Post> postsDB = null;
 
-        switch (mode) {
+        switch (mode){
+            case "recent":
+                Pageable sortedByNew = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit), Sort.by("date").descending());
+                postsDB = postRepository.findActivePosts(sortedByNew);
+                break;
             case "popular":
-                posts.sort(Comparator.comparingInt(o -> -1 *o.getComments().size()));
+                Pageable sortedByComments = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit), Sort.by("comments.size").descending());
+                postsDB = postRepository.findActivePosts(sortedByComments);
                 break;
             case "best":
-                // ПРоблема
-                posts.sort(Comparator.comparingInt(o -> -1 * o.getVotes().size()));
+                Pageable sortedByLikes = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit));
+                postsDB = postRepository.findLike(sortedByLikes);
                 break;
             case "early":
-                posts.sort(Comparator.comparing(com.example.model.Post::getDate));
+                Pageable sortedByOld = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit), Sort.by("date"));
+                postsDB = postRepository.findActivePosts(sortedByOld);
                 break;
-            case "recent":
-                posts.sort(Comparator.comparing(com.example.model.Post::getDate).reversed());
         }
+        List<com.example.api.response.innerObjects.Post> postsForResponse = new ArrayList<>();
 
-        for (int i = Integer.parseInt(offset); i < lim; i++){
-            Post post = new Post();
-            post.setId(posts.get(i).getId());
-
-            Long time = posts.get(i).getDate().getTime();
-            post.setTimestamp(Long.parseLong(time.toString().substring(0, 10)));
-
-            User user = new User();
-            user.setId(posts.get(i).getUser().getId());
-            user.setName(posts.get(i).getUser().getName());
-            post.setUser(user);
-
-            post.setTitle(posts.get(i).getTitle());
-            String str = posts.get(i).getText().length() > 150 ? posts.get(i).getText()
-                    .substring(0, 150) + "..." : posts.get(i).getText();
-            post.setAnnounce(str);
-            post.setLikeCount(postVotesRepository.countPostVotesByPostIdAndValueEquals(posts.get(i).getId(), true));
-            post.setDislikeCount(postVotesRepository.countPostVotesByPostIdAndValueEquals(posts.get(i).getId(), false));
-            post.setViewCount(posts.get(i).getViewCount());
-            post.setCommentCount(posts.get(i).getComments().size());
-            list.add(post);
+        for (Post post : postsDB){
+            com.example.api.response.innerObjects.Post p = new com.example.api.response.innerObjects.Post();
+            p.setId(post.getId());
+            Long time = post.getDate().getTime();
+            p.setTimestamp(Long.parseLong(time.toString().substring(0, 10)));
+            p.setUser(new User(post.getUser().getId(), post.getUser().getName()));
+            p.setTitle(post.getTitle());
+            String text = post.getText().length() > 150 ? (post.getText().substring(0, 150) + "...") : post.getText();
+            p.setAnnounce(text);
+            p.setLikeCount(postVotesRepository.countPostVotesByPostIdAndValueEquals(post.getId(), true));
+            p.setDislikeCount(postVotesRepository.countPostVotesByPostIdAndValueEquals(post.getId(), false));
+            p.setCommentCount(post.getComments().size());
+            p.setViewCount(post.getViewCount());
+            postsForResponse.add(p);
         }
+        return new PostsResponse(postsDB.size(), postsForResponse);
 
-        PostsResponse postsResponse = new PostsResponse(posts.size(), list);
-
-        return postsResponse;
     }
 }
