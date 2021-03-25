@@ -7,4 +7,8 @@ CREATE TABLE `tags` (
 GO
 
 INSERT INTO `tags` (`id`, `name`)
-    VALUES (1, 'testTag');
+    VALUES (1, 'Spring'),
+           (2, 'Java'),
+           (3, 'SQL'),
+           (4, 'Hibernate'),
+           (5, 'Test');

@@ -1,6 +1,7 @@
 package com.example.api.response;
 
 import com.example.api.response.innerObjects.Post;
+import com.example.api.response.innerObjects.PostDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,28 +9,28 @@ import java.util.List;
 
 public class PostsResponse {
 
-    private int count;
+    private long count;
 
-    private List<Post> posts;
+    private List<PostDTO> posts;
 
-    public PostsResponse(int count, List<Post> postsList) {
+    public PostsResponse(long count, List<PostDTO> postsList) {
         this.count = count;
         this.posts = postsList;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.count = count;
     }
 
-    public List<Post> getPosts() {
+    public List<PostDTO> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> postsList) {
+    public void setPosts(List<PostDTO> postsList) {
         this.posts = postsList;
     }
 }

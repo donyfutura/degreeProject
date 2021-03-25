@@ -10,4 +10,11 @@ CREATE TABLE `tag2post` (
 GO
 
 INSERT INTO `tag2post` (`post_id`, `tag_id`)
-    VALUES (1, 1);
+    VALUES (1, 1),
+           (1, 2),
+           (3, 3),
+           (3, 4),
+           (3, 1),
+           (6, 2),
+           (7, 3),
+           (8, 3);

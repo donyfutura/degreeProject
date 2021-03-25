@@ -1,10 +1,13 @@
 package com.example.service;
 
 import com.example.api.response.PostsResponse;
+import com.example.api.response.innerObjects.PostDTO;
 import com.example.api.response.innerObjects.User;
 import com.example.model.Post;
+import com.example.model.PostVotes;
 import com.example.repository.PostRepository;
 import com.example.repository.PostVotesRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,7 +34,7 @@ public class PostService {
 
     public PostsResponse getPosts(String offset, String limit, String mode){
 
-        List<Post> postsDB = null;
+        Page<Post> postsDB = null;
 
         switch (mode){
             case "recent":
@@ -51,10 +54,10 @@ public class PostService {
                 postsDB = postRepository.findActivePosts(sortedByOld);
                 break;
         }
-        List<com.example.api.response.innerObjects.Post> postsForResponse = new ArrayList<>();
+        List<PostDTO> postsForResponse = new ArrayList<>();
 
         for (Post post : postsDB){
-            com.example.api.response.innerObjects.Post p = new com.example.api.response.innerObjects.Post();
+            PostDTO p  = new PostDTO();
             p.setId(post.getId());
             Long time = post.getDate().getTime();
             p.setTimestamp(Long.parseLong(time.toString().substring(0, 10)));
@@ -68,7 +71,7 @@ public class PostService {
             p.setViewCount(post.getViewCount());
             postsForResponse.add(p);
         }
-        return new PostsResponse(postsDB.size(), postsForResponse);
+        return new PostsResponse(postsDB.getTotalElements(), postsForResponse);
 
     }
 }
