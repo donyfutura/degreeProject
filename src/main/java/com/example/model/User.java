@@ -39,6 +39,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
     private Set<Post> posts;
 
+    public Role getRole(){
+        return isModerator ? Role.MODERATOR : Role.USER;
+    }
+
     public int getId() {
         return id;
     }

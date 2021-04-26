@@ -6,6 +6,7 @@ import com.example.model.Post;
 import com.example.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class ApiPostController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('user:write')")
     public PostsResponse allPosts(@RequestParam(defaultValue = "0") int offset,
                                   @RequestParam(defaultValue = "10") int limit,
                                   @RequestParam(defaultValue = "recent") String mode){
@@ -29,6 +31,7 @@ public class ApiPostController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('user:moderate')")
     public PostsResponse searchPosts(@RequestParam(defaultValue = "0") int offset,
                                      @RequestParam(defaultValue = "10") int limit,
                                      @RequestParam String query){

@@ -21,17 +21,11 @@ public class SettingsService {
 
         SettingsResponse settingsResponse = new SettingsResponse();
 
-        for(GlobalSetting s : globalSettingList){
-            if (s.getName().equals("MULTIUSER_MODE")){
-                settingsResponse.setMultiuserMode(s.isValue());
-            }
-            if (s.getName().equals("POST_PREMODERATION")){
-                settingsResponse.setPostPremoderation(s.isValue());
-            }
-            if (s.getName().equals("STATISTICS_IS_PUBLIC")){
-                settingsResponse.setStatisticsIsPublic(s.isValue());
-            }
-        }
+        settingsResponse.setMultiuserMode(true);
+        settingsResponse.setStatisticsIsPublic(true);
+        settingsResponse.setPostPremoderation(true);
+
+        System.out.println(settingsResponse.isMultiuserMode() + " " + settingsResponse.isPostPremoderation() + " " + settingsResponse.isStatisticsIsPublic());
 
         return settingsResponse;
     }

@@ -13,5 +13,5 @@ CREATE TABLE `users` (
 GO
 
 INSERT INTO `users` (`id`, `code`, `reg_time`, `email`, `is_moderator`, `name`, `password`, `photo`)
-    VALUES (1, null, '2017-11-15 15:30:14.332', 'test1@mail.com', 1, 'test1', 'test', null),
-           (2, null, '2017-11-15 15:30:14.332', 'test2@mail.com', 0, 'test2', 'test', null);
+    VALUES (1, null, '2017-11-15 15:30:14.332', 'test@mail.com', 0, 'test', '$2y$12$KOY0APPxYcagviQRaA2Uue5KnugrueUbUfpmqAtwTrqT3zbiKlZzS', null),
+           (2, null, '2017-11-15 15:30:14.332', 'moderator@mail.com', 1, 'moderator', '$2y$12$KOY0APPxYcagviQRaA2Uue5KnugrueUbUfpmqAtwTrqT3zbiKlZzS', null);

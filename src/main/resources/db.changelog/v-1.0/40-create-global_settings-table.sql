@@ -9,6 +9,6 @@ CREATE TABLE `global_settings` (
 GO
 
 INSERT INTO `global_settings` (`id`, `code`, `name`, `value`)
-    VALUES ('1', 'MULTIUSER_MODE', 'Многопользовательский режим', '0'),
-            ('2', 'POST_PREMODERATION ', 'Премодерация постов ', '0'),
-            ('3', 'STATISTICS_IS_PUBLIC ', 'Показывать всем статистику блога', '0');
+    VALUES ('1', 'MULTIUSER_MODE', 'Многопользовательский режим', '1'),
+            ('2', 'POST_PREMODERATION ', 'Премодерация постов ', '1'),
+            ('3', 'STATISTICS_IS_PUBLIC ', 'Показывать всем статистику блога', '1');
