@@ -18,6 +18,10 @@ public class PostsResponse {
         this.posts = postsList;
     }
 
+    public PostsResponse() {
+
+    }
+
     public long getCount() {
         return count;
     }

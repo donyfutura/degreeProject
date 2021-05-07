@@ -2,12 +2,18 @@ package com.example.controller;
 
 import com.example.api.response.PostDTO;
 import com.example.api.response.PostsResponse;
+import com.example.model.ModerationStatus;
 import com.example.model.Post;
+import com.example.model.User;
 import com.example.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/post")
@@ -60,6 +66,25 @@ public class ApiPostController {
     public ResponseEntity<PostDTO> postById(@PathVariable int id){
         return postService.getPostById(id);
     }
+
+    @GetMapping("/moderation")
+    @PreAuthorize("hasAnyAuthority('user:moderate')")
+    public ResponseEntity<PostsResponse> moderationPosts(@RequestParam(defaultValue = "0") int offset,
+                                                        @RequestParam(defaultValue = "10") int limit,
+                                                        @RequestParam String status,
+                                                         Authentication authentication){
+        return postService.getModerationPosts(offset, limit, status, authentication.getName());
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyAuthority('user:write')")
+    public ResponseEntity<PostsResponse> myPosts(@RequestParam(defaultValue = "0") int offset,
+                                                 @RequestParam(defaultValue = "10") int limit,
+                                                 @RequestParam String status,
+                                                 Authentication authentication){
+        return postService.getMyPosts(offset, limit, status, authentication.getName());
+    }
+
 
 
 }

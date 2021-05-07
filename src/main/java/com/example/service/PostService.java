@@ -4,23 +4,21 @@ import com.example.api.response.*;
 import com.example.api.response.innerObjects.PostDTO;
 import com.example.api.response.innerObjects.User;
 import com.example.comparator.CommentsComparator;
-import com.example.controller.CalendarController;
+import com.example.model.ModerationStatus;
 import com.example.model.Post;
 import com.example.model.PostComment;
-import com.example.model.PostVotes;
 import com.example.model.Tag;
 import com.example.repository.PostRepository;
 import com.example.repository.PostVotesRepository;
+import com.example.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.expression.Numbers;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,10 +30,48 @@ public class PostService {
 
     private final PostVotesRepository postVotesRepository;
 
-    public PostService(PostRepository postRepository, PostVotesRepository postVotesRepository) {
+    private final UserRepository userRepository;
+
+    public PostService(PostRepository postRepository, PostVotesRepository postVotesRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postVotesRepository = postVotesRepository;
+        this.userRepository = userRepository;
     }
+    public ResponseEntity<PostsResponse> getMyPosts(int offset, int limit, String status, String userName) {
+        Optional<com.example.model.User> user = userRepository.findByEmail(userName);
+        int userId = user.get().getId();
+        Page<Post> postsDB = null;
+        Pageable pageable = PageRequest.of(offset, limit);
+        switch (status){
+            case "inactive": postsDB = postRepository.findPostsByUserId(userId, false, null, pageable); break;
+            case "pending": postsDB = postRepository.findPostsByUserId(userId, true, ModerationStatus.NEW, pageable); break;
+            case "declined": postsDB = postRepository.findPostsByUserId(userId, true, ModerationStatus.DECLINED, pageable); break;
+            case "published": postsDB = postRepository.findPostsByUserId(userId, true, ModerationStatus.ACCEPTED, pageable); break;
+        }
+        PostsResponse response =  fillPostResponse(postsDB);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<PostsResponse> getModerationPosts(int offset, int limit, String status, String userName){
+        Optional<com.example.model.User> user = userRepository.findByEmail(userName);
+        int userId = user.get().getId();
+        ModerationStatus moderationStatus;
+        switch (status){
+            case "new": moderationStatus = ModerationStatus.NEW; break;
+            case "accepted": moderationStatus = ModerationStatus.ACCEPTED; break;
+            case "declined": moderationStatus = ModerationStatus.DECLINED; break;
+            default: moderationStatus = null;
+        }
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<Post> postsDB = postRepository.findByModeratorIdAndStatusEquals(userId, moderationStatus, pageable);
+        System.out.println(postsDB);
+
+        PostsResponse response = fillPostResponse(postsDB);
+        System.out.println(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     public ResponseEntity<com.example.api.response.PostDTO> getPostById(int id){
         Post post = postRepository.getPostById(id);
@@ -148,5 +184,6 @@ public class PostService {
         }
         return new PostsResponse(posts.getTotalElements(), postsForResponse);
     }
+
 
 }

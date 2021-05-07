@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import com.example.api.response.CountPostsByDate;
+import com.example.model.ModerationStatus;
 import com.example.model.Post;
 import com.example.model.Tag;
 import org.springframework.data.domain.Page;
@@ -62,5 +63,13 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
                     "AND posts.is_active = 1 AND posts.time <= now()", nativeQuery = true)
     Page<Post> findPostsByTagsContains(@Param("tag") String tag, Pageable pageable);
 
+    @Query(value = "select p from Post p where p.moderatorId = :id and p.status = :status and p.isActive = true")
+    Page<Post> findByModeratorIdAndStatusEquals(@Param("id") int moderatorId, @Param("status") ModerationStatus status, Pageable pageable);
+
+    @Query(value = "select p from Post p where p.user.id = :id and p.status = :status and p.isActive = :isActive")
+    Page<Post> findPostsByUserId(@Param("id") int userId,
+                                 @Param("isActive") boolean isActive,
+                                 @Param("status")ModerationStatus moderationStatus,
+                                 Pageable pageable);
 
 }

@@ -15,10 +15,10 @@ CREATE TABLE `posts` (
 
 GO
 INSERT INTO `posts` (`id`, `time`, `is_active`, `moderator_id`, `moderation_status`, `text`, `title`, `view_count`, `user_id`)
-    VALUES (1, '2017-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
-            (2, '2018-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
-            (3, '2019-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
-            (4, '2010-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
+    VALUES (1, '2017-11-15 15:30:14.332', 1, 2, 'ACCEPTED', 'testText', 'testTitle', 1, 1),
+            (2, '2018-11-15 15:30:14.332', 1, 2, 'ACCEPTED', 'testText', 'testTitle', 1, 1),
+            (3, '2019-11-15 15:30:14.332', 1, 2, 'ACCEPTED', 'testText', 'testTitle', 1, 1),
+            (4, '2010-11-15 15:30:14.332', 1, 2, 'ACCEPTED', 'testText', 'testTitle', 1, 1),
             (5, '2020-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
             (6, '2021-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
             (7, '2014-11-15 15:30:14.332', 1, 1, 'ACCEPTED', 'testText', 'testTitle', 1, 2),
