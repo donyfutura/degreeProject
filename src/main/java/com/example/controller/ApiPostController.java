@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import com.example.api.request.AddingPostRequest;
+import com.example.api.request.LikeRequest;
+import com.example.api.response.AddingPostResponse;
 import com.example.api.response.PostDTO;
 import com.example.api.response.PostsResponse;
 import com.example.model.ModerationStatus;
@@ -14,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.Instant;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/post")
@@ -26,7 +31,6 @@ public class ApiPostController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('user:write')")
     public PostsResponse allPosts(@RequestParam(defaultValue = "0") int offset,
                                   @RequestParam(defaultValue = "10") int limit,
                                   @RequestParam(defaultValue = "recent") String mode){
@@ -37,7 +41,6 @@ public class ApiPostController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyAuthority('user:moderate')")
     public PostsResponse searchPosts(@RequestParam(defaultValue = "0") int offset,
                                      @RequestParam(defaultValue = "10") int limit,
                                      @RequestParam String query){
@@ -84,6 +87,37 @@ public class ApiPostController {
                                                  Authentication authentication){
         return postService.getMyPosts(offset, limit, status, authentication.getName());
     }
+
+    @PostMapping()
+    @PreAuthorize("hasAnyAuthority('user:write')")
+    public ResponseEntity<AddingPostResponse> addPost(@RequestBody AddingPostRequest request,
+                                                      Authentication authentication){
+        return postService.addPost(request.getTimestamp(), request.getActive(), request.getTitle(), request.getTags(), request.getText(), authentication);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('user:write')")
+    public ResponseEntity<AddingPostResponse> editPost(@RequestBody AddingPostRequest request,
+                                                       @PathVariable int id,
+                                                       Authentication authentication){
+        return postService.editPost(request, authentication, id);
+    }
+
+    @PostMapping("/like")
+    @PreAuthorize("hasAnyAuthority('user:write')")
+    public ResponseEntity<Map> likePost(@RequestBody LikeRequest likeRequest,
+                                        Authentication authentication){
+        return postService.like(likeRequest, authentication);
+    }
+
+    @PostMapping("/dislike")
+    @PreAuthorize("hasAnyAuthority('user:write')")
+    public ResponseEntity<Map> dislikePost(@RequestBody LikeRequest likeRequest,
+                                        Authentication authentication){
+        return postService.dislike(likeRequest, authentication);
+    }
+
+
 
 
 

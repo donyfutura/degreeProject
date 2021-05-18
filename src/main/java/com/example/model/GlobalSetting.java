@@ -19,8 +19,7 @@ public class GlobalSetting {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    @Type(type = "yes_no")
+    @Column(nullable = false, columnDefinition = "bit default 0")
     private boolean value;
 
     public int getId() {

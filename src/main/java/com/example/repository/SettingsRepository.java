@@ -11,4 +11,6 @@ public interface SettingsRepository extends CrudRepository<GlobalSetting, Intege
 
     List<GlobalSetting> findAll();
 
+    GlobalSetting findByCodeEquals(String code);
+
 }

@@ -4,6 +4,7 @@ import com.example.api.response.CountPostsByDate;
 import com.example.model.ModerationStatus;
 import com.example.model.Post;
 import com.example.model.Tag;
+import com.example.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,7 +24,7 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
     @Query(value = "select p from Post p where p.isActive = true and p.status = 'ACCEPTED' and p.date <= current_date")
     Page<Post> findActivePosts(Pageable pageable);
 
-    @Query(value = "select p from Post p where p.isActive = true and p.status = 'ACCEPTED' and p.date <= current_date and p.id=:id")
+    @Query(value = "select p from Post p where p.id=:id")
     Post getPostById(@Param("id") int id);
 
     List<Post> findByUserId(int user_id);
@@ -66,10 +67,15 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
     @Query(value = "select p from Post p where p.moderatorId = :id and p.status = :status and p.isActive = true")
     Page<Post> findByModeratorIdAndStatusEquals(@Param("id") int moderatorId, @Param("status") ModerationStatus status, Pageable pageable);
 
-    @Query(value = "select p from Post p where p.user.id = :id and p.status = :status and p.isActive = :isActive")
+    @Query(value = "select p from Post p where p.user.id = :id and p.status = :status and p.isActive = :isActive order by p.date asc")
     Page<Post> findPostsByUserId(@Param("id") int userId,
                                  @Param("isActive") boolean isActive,
                                  @Param("status")ModerationStatus moderationStatus,
                                  Pageable pageable);
+
+    List<Post> findPostsByStatus(ModerationStatus moderationStatus);
+
+    @Query(value = "select p from Post p where p.isActive = true and p.status = 'ACCEPTED' and p.date <= current_date order by p.date asc")
+    List<Post> findAllPosts();
 
 }

@@ -1,13 +1,12 @@
 package com.example.service;
 
+import com.example.api.request.AddingPostRequest;
+import com.example.api.request.LikeRequest;
 import com.example.api.response.*;
 import com.example.api.response.innerObjects.PostDTO;
 import com.example.api.response.innerObjects.User;
 import com.example.comparator.CommentsComparator;
-import com.example.model.ModerationStatus;
-import com.example.model.Post;
-import com.example.model.PostComment;
-import com.example.model.Tag;
+import com.example.model.*;
 import com.example.repository.PostRepository;
 import com.example.repository.PostVotesRepository;
 import com.example.repository.UserRepository;
@@ -17,10 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +80,8 @@ public class PostService {
         if (post == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        post.setViewCount(post.getViewCount() + 1);
+        postRepository.save(post);
         com.example.api.response.PostDTO postDTO = new com.example.api.response.PostDTO();
         postDTO.setId(post.getId());
         postDTO.setActive(true);
@@ -183,6 +187,173 @@ public class PostService {
             postsForResponse.add(p);
         }
         return new PostsResponse(posts.getTotalElements(), postsForResponse);
+    }
+
+
+    public ResponseEntity<AddingPostResponse> addPost(Long timestamp, int active, String title, String[] tags, String text, Authentication authentication) {
+        boolean flag = true;
+        AddingPostResponse addingPostResponse = new AddingPostResponse();
+        HashMap<String, String> map = new HashMap<>();
+        if (title.length() < 3){
+            map.put("title", "Заголовок публикации слишком короткий");
+            flag = false;
+        }
+        if (text.length() < 50){
+            map.put("text", "Текст публикации слишком короткий");
+            flag = false;
+        }
+
+        if (flag){
+            Post newPost = new Post();
+            Set<Tag> tagsForPost = new HashSet<>();
+            for (String tag : tags){
+                Tag newTag = new Tag();
+                newTag.setName(tag);
+                tagsForPost.add(newTag);
+            }
+            if (Instant.now().isAfter(Instant.ofEpochMilli(timestamp))) {
+                newPost.setDate(new Date());
+            } else {
+               newPost.setDate(Date.from(Instant.ofEpochMilli(timestamp)));
+            }
+            com.example.model.User user = userRepository.findByEmail(authentication.getName()).get();
+            newPost.setUser(user);
+            newPost.setTitle(title);
+            newPost.setTags(tagsForPost);
+            newPost.setText(text);
+            newPost.setActive(active == 1);
+            newPost.setStatus(ModerationStatus.NEW);
+            newPost.setTags(tagsForPost);
+            postRepository.save(newPost);
+            addingPostResponse.setResult(true);
+        } else {
+            addingPostResponse.setResult(false);
+            addingPostResponse.setErrors(map);
+        }
+
+        return new ResponseEntity<>(addingPostResponse, HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<AddingPostResponse> editPost(AddingPostRequest request, Authentication authentication, int id) {
+        boolean flag = true;
+        AddingPostResponse addingPostResponse = new AddingPostResponse();
+        HashMap<String, String> map = new HashMap<>();
+        com.example.model.User user = userRepository.findByEmail(authentication.getName()).get();
+        if (request.getTitle().length() < 3){
+            map.put("title", "Заголовок публикации слишком короткий");
+            flag = false;
+        }
+        if (request.getText().length() < 50){
+            map.put("text", "Текст публикации слишком короткий");
+            flag = false;
+        }
+
+        if (flag){
+            Post newPost = postRepository.getPostById(id);
+            Set<Tag> tagsForPost = new HashSet<>();
+            for (String tag : request.getTags()){
+                Tag newTag = new Tag();
+                newTag.setName(tag);
+                tagsForPost.add(newTag);
+            }
+            if (Instant.now().isAfter(Instant.ofEpochMilli(request.getTimestamp()))) {
+                newPost.setDate(new Date());
+            } else {
+                newPost.setDate(Date.from(Instant.ofEpochMilli(request.getTimestamp())));
+            }
+            newPost.setTitle(request.getTitle());
+            newPost.setTags(tagsForPost);
+            newPost.setText(request.getText());
+            newPost.setActive(request.getActive() == 1);
+            newPost.setStatus(ModerationStatus.NEW);
+            newPost.setTags(tagsForPost);
+            postRepository.save(newPost);
+            addingPostResponse.setResult(true);
+        } else {
+            addingPostResponse.setResult(false);
+            addingPostResponse.setErrors(map);
+        }
+
+        return new ResponseEntity<>(addingPostResponse, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Map> like(LikeRequest likeRequest, Authentication authentication) {
+            Post post = postRepository.getPostById(likeRequest.getPostId());
+            PostVotes like = new PostVotes();
+            List<PostVotes> votes = postVotesRepository.findByPost(post).stream()
+                    .filter(v -> v.getUser().getEmail().equals(authentication.getName()))
+                    .collect(Collectors.toList());
+            if (votes.isEmpty()){
+                like.setUser(userRepository.findByEmail(authentication.getName()).get());
+                like.setDate(new Date());
+                like.setPost(post);
+                like.setValue(true);
+                postVotesRepository.save(like);
+            } else {
+                PostVotes vote = votes.get(0);
+                vote.setValue(true);
+                postVotesRepository.save(vote);
+            }
+        return new ResponseEntity<>(Map.of("result", true), HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<Map> dislike(LikeRequest likeRequest, Authentication authentication){
+        Post post = postRepository.getPostById(likeRequest.getPostId());
+        PostVotes dislike = new PostVotes();
+        List<PostVotes> votes = postVotesRepository.findByPost(post).stream()
+                .filter(v -> v.getUser().getEmail().equals(authentication.getName()))
+                .collect(Collectors.toList());
+        if (votes.isEmpty()){
+            dislike.setUser(userRepository.findByEmail(authentication.getName()).get());
+            dislike.setDate(new Date());
+            dislike.setPost(post);
+            dislike.setValue(false);
+            postVotesRepository.save(dislike);
+        } else {
+            PostVotes vote = votes.get(0);
+            vote.setValue(false);
+            postVotesRepository.save(vote);
+        }
+        return new ResponseEntity<>(Map.of("result", true), HttpStatus.OK);
+    }
+
+    public ResponseEntity<StatisticsResponse> myStatistics(Authentication authentication){
+        List<Post> posts = postRepository.findPostsByUserId(userRepository.findByEmail(authentication.getName()).get().getId(),
+                                                    true,
+                                                            ModerationStatus.ACCEPTED,
+                                                            Pageable.unpaged()).toList();
+        return countStats(posts);
+    }
+
+    public ResponseEntity<StatisticsResponse> allStatistics(Authentication authentication){
+        List<Post> posts = postRepository.findAllPosts();
+        return countStats(posts);
+    }
+
+    private ResponseEntity<StatisticsResponse> countStats(List<Post> posts){
+        StatisticsResponse statisticsResponse = new StatisticsResponse();
+        int likes = 0;
+        int dislikes = 0;
+        int views = 0;
+        for (Post post: posts){
+            views += post.getViewCount();
+            for (PostVotes votes : post.getVotes()){
+                if (votes.isValue()){
+                    likes++;
+                } else {
+                    dislikes++;
+                }
+            }
+        }
+        statisticsResponse.setPostsCount(posts.size());
+        statisticsResponse.setViewsCount(views);
+        statisticsResponse.setFirstPublication(Long.parseLong(String.valueOf(posts.get(0).getDate().getTime()).substring(0, 10)));
+        statisticsResponse.setLikesCount(likes);
+        statisticsResponse.setDislikesCount(dislikes);
+
+        return new ResponseEntity<>(statisticsResponse, HttpStatus.OK);
     }
 
 
